@@ -9,7 +9,7 @@ public class Book {
     private int publishYear;
     private int quantity;
     //Constructor
-    public Book(int bookID) {
+    public Book() {
         this.bookID = bookID;
     }
 

@@ -11,7 +11,7 @@ public class Reader {
         this.readerID = readerID;
     }
 
-    public Reader() {
+    public Reader(int readerID, String data, String address, int i) {
     }
 
     public Reader(int readerID, String fullName, String address, String phoneNumber) {
