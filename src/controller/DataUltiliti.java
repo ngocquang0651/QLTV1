@@ -107,6 +107,29 @@ public class DataUltiliti {
         return reader;
     }
 
+    public ArrayList<BookReaderManagerment> readBRMFromFile(String fileName){
+        openFileToRead(fileName);
+        ArrayList<BookReaderManagerment> brms = new ArrayList<>();
+        while(scanner.hasNextLine()){
+            String data = scanner.nextLine();
+            BookReaderManagerment brm = createBRMsFromData(data);
+            brms.add(brm);
+        }
+
+
+        closeFileToRead(fileName);
+        return brms;
+    }
+
+    public BookReaderManagerment createBRMsFromData(String data) {
+        //printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
+        //                +brm.getState()+"|"+brm.getTotal());
+        String[] datas = data.split("//|");
+        BookReaderManagerment brm =new BookReaderManagerment(new Book(Integer.parseInt(datas[0])),
+                new Reader(Integer.parseInt(datas[1])),Integer.parseInt(datas[2]),datas[3],0);
+        return brm;
+    }
+
     public void closeFileToRead(String fileName){
         try{
             scanner.close();
