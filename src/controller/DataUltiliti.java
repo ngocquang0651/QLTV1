@@ -15,6 +15,9 @@ import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static java.lang.Integer.parseInt;
+
 public class DataUltiliti {
     private FileWriter fileWriter;
     private BufferedWriter bufferedWriter;
@@ -75,22 +78,31 @@ public class DataUltiliti {
             Book book = createBookFromData(data);
             books.add(book);
         }
+
         closeFileToRead(fileName);
         return books;
     }
 
     public Book createBookFromData(String data) {
-        String[] datas = data.split("//|");
+        Book book = new Book();
+        String[] datas = data.split("\\|");
         //printWriter.println(book.getBookID()+"|"+book.getBookName()+"|"+book.getAuthor()+"|"+book.getSpecialization()
         //                +"|"+book.getPublishYear()+"|"+book.getQuantity());
-        Book book = new Book(Integer.parseInt(datas[0]),datas[1],datas[2],datas[3],
-                Integer.parseInt(datas[4]),Integer.parseInt(datas[5]));
+        //Book book = new Book(Integer.parseInt(datas[0]),datas[1],datas[2],datas[3],
+         //  Integer.parseInt(datas[4]),Integer.parseInt(datas[5]));
+        book.setBookID(Integer.parseInt(datas[0]));
+        book.setBookName(datas[1]);
+        book.setSpecialization(datas[2]);
+        book.setAuthor(datas[3]);
+        book.setPublishYear(Integer.parseInt(datas[4]));
+        book.setQuantity(Integer.parseInt(datas[5]));
         return book;
     }
     public ArrayList<Reader> readReadersFromFile(String fileName){
         openFileToRead(fileName);
         ArrayList<Reader> readers = new ArrayList<>();
         while (scanner.hasNextLine()){
+            scanner.nextLine();
             String data = scanner.nextLine();
             Reader reader = createReaderFromData(data);
             readers.add(reader);
@@ -100,10 +112,10 @@ public class DataUltiliti {
     }
 
     public Reader createReaderFromData(String data) {
-        String[] datas = data.split("//|");//Tách chuỗi thành mảng nếu gặp | thì tạo ra 1 phần tử
+        String[] datas = data.split("\\|");//Tách chuỗi thành mảng nếu gặp | thì tạo ra 1 phần tử
         //printWriter.println(reader.getReaderID()+"|"+reader.getFullName()+"|"+reader.getAddress()
         //                +"|"+reader.getPhoneNumber());
-        Reader reader =new Reader(Integer.parseInt(datas[0]),datas[1],datas[2],datas[3]);
+        Reader reader =new Reader(parseInt(datas[0]),datas[1],datas[2],datas[3]);
         return reader;
     }
 
@@ -124,9 +136,9 @@ public class DataUltiliti {
     public BookReaderManagerment createBRMsFromData(String data) {
         //printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
         //                +brm.getState()+"|"+brm.getTotal());
-        String[] datas = data.split("//|");
-        BookReaderManagerment brm =new BookReaderManagerment(new Book(Integer.parseInt(datas[0])),
-                new Reader(Integer.parseInt(datas[1])),Integer.parseInt(datas[2]),datas[3],0);
+        String[] datas = data.split("\\|");
+        BookReaderManagerment brm =new BookReaderManagerment(new Book(parseInt(datas[0])),
+                new Reader(parseInt(datas[1])), parseInt(datas[2]),datas[3],0);
         return brm;
     }
 

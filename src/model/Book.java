@@ -8,13 +8,20 @@ public class Book {
     private String specialization;
     private int publishYear;
     private int quantity;
+
+    public static int getId(){return id;}
+    public static void setId(int id){Book.id=id;
+    }
+
+
     //Constructor
     public Book(int i) {
         this.bookID = bookID;
     }
 
-    public Book(int bookID, String bookName, String author, String specialization, int publishYear, int quantity) {
-        this.bookID = bookID;
+    public Book(String bookName, String author, String specialization,
+                int publishYear, int quantity) {
+        setBookID();
         this.bookName = bookName;
         this.author = author;
         this.specialization = specialization;
@@ -24,6 +31,7 @@ public class Book {
 
     public Book() {
     }
+
 
     //getter, setter
     public int getBookID() {

@@ -4,6 +4,7 @@ import controller.DataUltiliti;
 import model.Book;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class View {
@@ -11,6 +12,8 @@ public class View {
         Object var;
         var bookFileName ="BOOK.DAT";
         var controller = new DataUltiliti();
+        var books= new ArrayList<Book>();
+        var isBookChecked = false;
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -28,6 +31,10 @@ public class View {
                 }
                 case 1:{
 //int bookID, String bookName, String author, String specialization, int publishYear, int quantity
+                    if(!isBookChecked) {
+                        checkBookTD(controller, bookFileName);//Check IDbị trùng.
+                        isBookChecked=true;
+                    }
                     String[] specs={"Science","Art","Economic","IT"};
                     String bookName,author,spec;
                     int year, quanlity,a;
@@ -41,11 +48,32 @@ public class View {
                     }while(a<1||a>4);
                         spec = specs[a-1];
                     System.out.println("nhap nam phat hanh");
-
-                    Book book = new Book();
+                    year = scanner.nextInt();
+                    System.out.println("nhap so luong");
+                    quanlity=scanner.nextInt();
+                    Book book = new Book(bookName,author,spec,year,quanlity);
                     controller.writeBookToFile(book,bookFileName);
+                    break;
                 }
+                case 2:{
+                   books= controller.readBooksFromFile(bookFileName);
+                    showBookinfo(books);
+                    break;
+                }
+
             }
         }while (choice !=0);
+    }
+
+    public static void checkBookTD(DataUltiliti controller,String fileName) {
+        var listBook=controller.readBooksFromFile(fileName);
+        Book.setId(listBook.get(listBook.size()-1).getBookID()+1);
+    }
+
+    private static void showBookinfo(ArrayList<Book> books) {
+        System.out.println("xuat ra thong tin sach trong file");
+        for(var b:books){
+            System.out.println(b);
+        }
     }
 }
