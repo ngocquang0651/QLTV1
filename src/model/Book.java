@@ -10,7 +10,8 @@ public class Book {
     private int quantity;
 
     public static int getId(){return id;}
-    public static void setId(int id){Book.id=id;
+    public static int setId(int id){Book.id=id;
+    return id;
     }
 
 

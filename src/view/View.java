@@ -67,7 +67,9 @@ public class View {
 
     public static void checkBookTD(DataUltiliti controller,String fileName) {
         var listBook=controller.readBooksFromFile(fileName);
-        Book.setId(listBook.get(listBook.size()-1).getBookID()+1);
+        if (listBook.size()!=0) {
+            Book.setId(listBook.get(listBook.size() - 1).getBookID()+1);
+        }
     }
 
     private static void showBookinfo(ArrayList<Book> books) {
