@@ -7,10 +7,7 @@ import model.Reader;
 import model.BookReaderManagerment;
 
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -65,6 +62,10 @@ public class DataUltiliti {
 
     public void openFileToRead (String fileName){
         try{
+            File file =new File(fileName);
+            if(!file.exists()){// Neu file chua ton tai
+                file.createNewFile();//tao file moi
+            }
             scanner = new Scanner(Paths.get(fileName),"UTF-8");
         }catch (Exception e){
             e.printStackTrace();
@@ -102,7 +103,6 @@ public class DataUltiliti {
         openFileToRead(fileName);
         ArrayList<Reader> readers = new ArrayList<>();
         while (scanner.hasNextLine()){
-            scanner.nextLine();
             String data = scanner.nextLine();
             Reader reader = createReaderFromData(data);
             readers.add(reader);
@@ -115,7 +115,11 @@ public class DataUltiliti {
         String[] datas = data.split("\\|");//Tách chuỗi thành mảng nếu gặp | thì tạo ra 1 phần tử
         //printWriter.println(reader.getReaderID()+"|"+reader.getFullName()+"|"+reader.getAddress()
         //                +"|"+reader.getPhoneNumber());
-        Reader reader =new Reader(parseInt(datas[0]),datas[1],datas[2],datas[3]);
+        Reader reader =new Reader();
+        reader.setReaderID(Integer.parseInt(datas[0]));
+        reader.setFullName(datas[1]);
+        reader.setAddress(datas[2]);
+        reader.setPhoneNumber(datas[3]);
         return reader;
     }
 
@@ -149,6 +153,7 @@ public class DataUltiliti {
             e.printStackTrace();
         }
     }
+
 
 
 

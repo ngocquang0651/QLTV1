@@ -47,6 +47,9 @@ public class BookReaderManagerment {
         this.total = total;
     }
 
+    public BookReaderManagerment() {
+    }
+
     public BookReaderManagerment(Book books, Reader readers, int numberOfBorrow, String state, int total) {
         this.books = books;
         this.readers = readers;

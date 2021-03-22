@@ -10,6 +10,10 @@ public class Reader {
     public Reader(int readerID) {
         this.readerID = readerID;
     }
+    public static int getId(){return id;}
+    public static int setId(int id){Reader.id=id;
+        return id;
+    }
 
     public Reader(int readerID, String data, String address, int i) {
     }
@@ -17,8 +21,9 @@ public class Reader {
     public Reader() {
     }
 
-    public Reader(int readerID, String fullName, String address, String phoneNumber) {
-        this.readerID = readerID;
+    public Reader( String fullName, String address, String phoneNumber) {
+
+        setReaderID();
         this.fullName = fullName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -35,6 +40,7 @@ public class Reader {
     public void setReaderID(int id) {
         this.readerID = id;
     }
+
 
     public String getFullName() {
         return fullName;
