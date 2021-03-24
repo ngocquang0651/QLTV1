@@ -14,12 +14,14 @@ public class controlerUltiliti {
         boolean isUpdate=false;
         for(int i=0;i<list.size();i++){
             BookReaderManagerment b = list.get(i);
-            if(b.getBooks().getBookID()==brm.getBooks().getBookID()
-                    && b.getReaders().getReaderID()==brm.getReaders().getReaderID()){
+            if((b.getBooks().getBookID()==brm.getBooks().getBookID())
+                    && (b.getReaders().getReaderID()==brm.getReaders().getReaderID())){
                 list.set(i,brm);//cap nhat lai so luong quan ly muon
+                isUpdate = true;
+                break;
             }
-        }
 
+        }
         if(!isUpdate){
             list.add(brm);
         }

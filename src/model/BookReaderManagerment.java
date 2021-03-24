@@ -60,9 +60,9 @@ public class BookReaderManagerment {
 
     @Override
     public String toString() {
-        return "BookReadermanagerment{" +
-                "books=" + books +
-                ", readers=" + readers +
+        return "BookReaderManagerment{" +
+                "books=" + books.getBookID() +
+                ", readers=" + readers.getReaderID() +
                 ", numberOfBorrow=" + numberOfBorrow +
                 ", State='" + State + '\'' +
                 ", total=" + total +

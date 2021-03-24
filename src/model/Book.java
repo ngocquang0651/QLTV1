@@ -17,8 +17,11 @@ public class Book {
 
     //Constructor
     public Book(int i) {
-        this.bookID = bookID;
+        this.bookID = i;
     }
+
+    public Book(int bookID,String bookName, String author, String specialization,
+                int publishYear, int quantity){}
 
     public Book(String bookName, String author, String specialization,
                 int publishYear, int quantity) {

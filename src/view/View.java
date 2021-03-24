@@ -4,6 +4,7 @@ import controller.DataUltiliti;
 import model.Book;
 import model.BookReaderManagerment;
 import model.Reader;
+import controller.controlerUltiliti;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class View {
             System.out.println("2. Hiện thị sách có trong file.");
             System.out.println("3. Them nguoi doc vo file. ");
             System.out.println("4. Hiện thị nguoi doc có trong file.");
+            System.out.println("5. Tao ra danh sach brm va in ra man hinh ");
             System.out.println("0. Thoát khỏi chương trình");
 
             choice = scanner.nextInt();
@@ -89,8 +91,14 @@ public class View {
                     break;
                 }
                 case 4: {
+                    brms = controller.readBRMFromFile(bRMFileName);
+                    for (var a:brms) {
+                        System.out.println(a);
+                    }
                     readers = controller.readReadersFromFile(readerFileName);
                     showReaderinfo(readers);
+
+
                     break;
                 }
                 case 5: {
@@ -100,8 +108,12 @@ public class View {
                     readers = controller.readReadersFromFile(readerFileName);
                     brms = controller.readBRMFromFile(bRMFileName);
                     //B1:
+                    for (var a:brms) {
+                        System.out.println(a);
+                    }
                     int readerID, bookID;
                     boolean isBorrowable = false;
+
 
                     do {
                         showReaderinfo(readers);
@@ -111,14 +123,15 @@ public class View {
                             break;//tat ca ban doc dax muon du sach quy dinh
                         }
                         isBorrowable = checkBorrowed(brms, readerID);
-                        if (isBookChecked) {
+                        if (isBorrowable) {
                             break;
                         } else {
                             System.out.println("ban doc da muon du so sach cho phep");
                             break;
                         }
                     } while (true);
-                    //B2
+
+                    //B1
                     boolean isFull = false;
                     do {
                         showBookinfo(books);
@@ -127,7 +140,6 @@ public class View {
 
                         if (bookID == 0) {
                             break;
-
                         }
                         isFull = checkFull(brms, readerID, bookID);//true neu muon du 3
                         if (isFull) {
@@ -137,29 +149,37 @@ public class View {
                         }
 
                     } while (true);
-                    //B3 nhap so luong muon
-                    int toltal = getTotal(brms, readerID, bookID);
+                    //B2 nhap so luong muon
+
+                    int toltal1 = getTotal1(brms,readerID,bookID);
                     do {
-                        System.out.println("nhap so luong muon (toi da 3 cuon)(da muon" + toltal + ")");
-                        int x = scanner.nextInt();
-                        if (x + toltal >= 1 && x + x + toltal <= 3) {
-                            toltal +=x;
+                        System.out.println("nhap so luong muon (toi da 3 cuon)(da muon " + toltal1 + "): ");
+                        int x= scanner.nextInt();
+
+                        if ((x + toltal1) >= 1 &&  (x + toltal1) <= 3) {
+                            toltal1 = toltal1 +x;
                             break;
                         } else {
                             System.out.println("nhap qua so luong sach duoc muon, vui long nhap laij!!");
                         }
                     } while (true);
+
                     scanner.nextLine();//bo dong co chua so
                     System.out.println("nhap tinh trang");
                     String status = "";
                     status = scanner.nextLine();
 
-                    //B4: Cap nhat laij file BRM.Dat
+                    //B3: Cap nhat laij file BRM.Dat
                     //Book books, Reader readers, int numberOfBorrow, String state, int total
                     Book currentBook = getBook(books,bookID);
                     Reader currentReader = getReader(readers,readerID);
-                    BookReaderManagerment b =new BookReaderManagerment(currentBook,currentReader,toltal,status,0);
-
+                    BookReaderManagerment b =new BookReaderManagerment(currentBook,currentReader,toltal1,status,0);
+                    controller.writeBRMToFile(b,bRMFileName);
+                    //B4
+                    var ultiliti= new controlerUltiliti();
+                    brms = ultiliti.updateBRMInfo(brms,b);//cap nhat danh sach quan ly muon
+                    controller.updateBRMFile(brms,bRMFileName);// cap nhat danh sach
+                    showBRMInfo(brms);
                     break;
                 }
 
@@ -167,6 +187,13 @@ public class View {
 
         } while (choice != 0);
 
+    }
+
+    private static void showBRMInfo(ArrayList<BookReaderManagerment> brms) {
+        System.out.println("xuat ra danh sach file");
+        for(var b:brms){
+            System.out.println(b);
+        }
     }
 
     private static Reader getReader(ArrayList<Reader> readers, int readerID) {
@@ -186,21 +213,37 @@ public class View {
         }
         return null;
     }
+//tra ve so luong da muon
+    private static int getTotal1(ArrayList<BookReaderManagerment> brms,
+                                 int readerID, int bookID) {
 
-    private static int getTotal(ArrayList<BookReaderManagerment> brms, int readerID, int bookID) {
-        for(var r:brms){
-            if(r.getReaders().getReaderID()==readerID && r.getBooks().getBookID()==bookID){
-                return r.getNumberOfBorrow();
+
+        for(var b : brms){
+            if(b.getReaders().getReaderID()==readerID
+                    && b.getBooks().getBookID()==bookID){
+                return b.getNumberOfBorrow();
             }
         }
         return 0;
+
     }
 
+    // test
+    private static int countBorrowed(int bookId, int readerId, ArrayList<BookReaderManagerment> m) {
+        for (int i = 0; m != null && i < m.size() && m.get(i) != null; i++) {
+            if (m.get(i).getReaders().getReaderID() == readerId &&
+                    m.get(i).getBooks().getBookID() == bookId) {
+                return m.get(i).getNumberOfBorrow();
+            }
+        }
+return 0;
+    }
 
     //xem coi soluong ban doc dax muon toi da hay chua
     private static boolean checkFull(ArrayList<BookReaderManagerment> brms, int readerID, int bookID){
             for (var r : brms) {
-                if (r.getReaders().getReaderID() == readerID && r.getBooks().getBookID() == bookID
+                if (r.getReaders().getReaderID() == readerID
+                        && r.getBooks().getBookID() == bookID
                         && r.getNumberOfBorrow() == 3){
                     return true;//khong duoc muon dau sach nay
                 }
@@ -210,9 +253,10 @@ public class View {
 
             private static boolean checkBorrowed (ArrayList < BookReaderManagerment > brms,int readerID){
                 int count = 0;
-                for (var r : brms) {
+                for (var r:brms) {
+
                     if (r.getReaders().getReaderID() == readerID) {
-                        count += r.getNumberOfBorrow();
+                        count =count + r.getNumberOfBorrow();
                     }
                 }
                 if (count == 15) {
@@ -227,6 +271,7 @@ public class View {
                     System.out.println(c);
                 }
             }
+
 
             public static void checkBookTD (DataUltiliti controller, String fileName){
                 var listBook = controller.readBooksFromFile(fileName);

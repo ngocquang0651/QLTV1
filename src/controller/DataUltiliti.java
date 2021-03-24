@@ -20,6 +20,9 @@ public class DataUltiliti {
     private BufferedWriter bufferedWriter;
     private PrintWriter printWriter;
     private Scanner scanner;
+
+    //___________mo va dong file khi viet_____________
+
     void openFileToWrite (String fileName ){
         try {
             fileWriter = new FileWriter(fileName,true);
@@ -30,26 +33,6 @@ public class DataUltiliti {
         }
 
     }
-    public void writeBookToFile (Book book, String fileName){
-        openFileToWrite(fileName);
-        printWriter.println(book.getBookID()+"|"+book.getBookName()+"|"+book.getAuthor()+"|"+book.getSpecialization()
-                +"|"+book.getPublishYear()+"|"+book.getQuantity());
-        closeFileAfterWrite(fileName);
-    }
-
-    public void writeReaderToFile(Reader reader, String fileName){
-        openFileToWrite(fileName);
-        printWriter.println(reader.getReaderID()+"|"+reader.getFullName()+"|"+reader.getAddress()
-                +"|"+reader.getPhoneNumber());
-        closeFileAfterWrite(fileName);
-    }
-    public void writeBRMToFile(BookReaderManagerment brm, String fileName){
-        openFileToWrite(fileName);
-        printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
-                +brm.getState()+"|"+brm.getTotal());
-        closeFileAfterWrite(fileName);
-    }
-
     public void closeFileAfterWrite (String fileName){
         try {
             printWriter.close();
@@ -60,6 +43,7 @@ public class DataUltiliti {
         }
     }
 
+    //______________Mo va dong file khi doc_____________________
     public void openFileToRead (String fileName){
         try{
             File file =new File(fileName);
@@ -71,6 +55,23 @@ public class DataUltiliti {
             e.printStackTrace();
         }
     }
+
+    public void closeFileToRead(String fileName){
+        try{
+            scanner.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //_______________sach_______________
+    public void writeBookToFile (Book book, String fileName){
+        openFileToWrite(fileName);
+        printWriter.println(book.getBookID()+"|"+book.getBookName()+"|"+book.getAuthor()+"|"+book.getSpecialization()
+                +"|"+book.getPublishYear()+"|"+book.getQuantity());
+        closeFileAfterWrite(fileName);
+    }
+
     public ArrayList<Book> readBooksFromFile(String fileName){
         openFileToRead(fileName);
         ArrayList<Book> books = new ArrayList<>();//kiểu dữ liệu mảng động giống vector trong c++ tự động mở rộng mảng khi có phàn tử thêm vào
@@ -90,7 +91,7 @@ public class DataUltiliti {
         //printWriter.println(book.getBookID()+"|"+book.getBookName()+"|"+book.getAuthor()+"|"+book.getSpecialization()
         //                +"|"+book.getPublishYear()+"|"+book.getQuantity());
         //Book book = new Book(Integer.parseInt(datas[0]),datas[1],datas[2],datas[3],
-         //  Integer.parseInt(datas[4]),Integer.parseInt(datas[5]));
+        //  Integer.parseInt(datas[4]),Integer.parseInt(datas[5]));
         book.setBookID(Integer.parseInt(datas[0]));
         book.setBookName(datas[1]);
         book.setSpecialization(datas[2]);
@@ -99,6 +100,16 @@ public class DataUltiliti {
         book.setQuantity(Integer.parseInt(datas[5]));
         return book;
     }
+
+    //_________________reader_____________________
+
+    public void writeReaderToFile(Reader reader, String fileName){
+        openFileToWrite(fileName);
+        printWriter.println(reader.getReaderID()+"|"+reader.getFullName()+"|"+reader.getAddress()
+                +"|"+reader.getPhoneNumber());
+        closeFileAfterWrite(fileName);
+    }
+
     public ArrayList<Reader> readReadersFromFile(String fileName){
         openFileToRead(fileName);
         ArrayList<Reader> readers = new ArrayList<>();
@@ -123,6 +134,16 @@ public class DataUltiliti {
         return reader;
     }
 
+    //_______________BRM_______________
+
+    public void writeBRMToFile(BookReaderManagerment brm, String fileName){
+        openFileToWrite(fileName);
+        printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
+                +brm.getState()+"|"+brm.getTotal());
+        closeFileAfterWrite(fileName);
+    }
+
+
     public ArrayList<BookReaderManagerment> readBRMFromFile(String fileName){
         openFileToRead(fileName);
         ArrayList<BookReaderManagerment> brms = new ArrayList<>();
@@ -141,19 +162,32 @@ public class DataUltiliti {
         //printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
         //                +brm.getState()+"|"+brm.getTotal());
         String[] datas = data.split("\\|");
-        BookReaderManagerment brm =new BookReaderManagerment(new Book(parseInt(datas[0])),
-                new Reader(parseInt(datas[1])), parseInt(datas[2]),datas[3],0);
+        BookReaderManagerment brm =new BookReaderManagerment(new Book(Integer.parseInt(datas[0])),
+                new Reader(Integer.parseInt(datas[1])),Integer.parseInt(datas[2]),datas[3],0);
+
+        //brm.setBooks(new Book(Integer.parseInt(datas[0])));
+        //brm.setReaders(new Reader(Integer.parseInt(datas[1])));
+        //brm.setNumberOfBorrow(Integer.parseInt(datas[2]));
+        //brm.setState(datas[3]);
+
         return brm;
     }
 
-    public void closeFileToRead(String fileName){
-        try{
-            scanner.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
+    public void updateBRMFile (ArrayList<BookReaderManagerment> list, String fileName){
+        //Delete file cu
+    File file = new File(fileName);
+    if(file.exists()){
+        file.delete();
+    }
+    //ghi moi file nay
+    openFileToWrite(fileName);
+    for( var brm:list){
+        printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
+                +brm.getState());
+    }
+    closeFileAfterWrite(fileName);
+}
 
 
 
