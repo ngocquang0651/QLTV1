@@ -145,11 +145,14 @@ public class DataUltiliti {
 
 
     public ArrayList<BookReaderManagerment> readBRMFromFile(String fileName){
+        Object var;
+        var books = readBooksFromFile("BOOK.DAT");
+        var readers = readReadersFromFile("READER.DAT");
         openFileToRead(fileName);
         ArrayList<BookReaderManagerment> brms = new ArrayList<>();
         while(scanner.hasNextLine()){
             String data = scanner.nextLine();
-            BookReaderManagerment brm = createBRMsFromData(data);
+            BookReaderManagerment brm = createBRMsFromData(data,readers,books);
             brms.add(brm);
         }
 
@@ -158,12 +161,12 @@ public class DataUltiliti {
         return brms;
     }
 
-    public BookReaderManagerment createBRMsFromData(String data) {
+    public BookReaderManagerment createBRMsFromData(String data,ArrayList<Reader>readers,ArrayList<Book>books   ) {
         //printWriter.println(brm.getBooks().getBookID()+"|"+brm.getReaders().getReaderID()+"|"+brm.getNumberOfBorrow()+"|"
         //                +brm.getState()+"|"+brm.getTotal());
         String[] datas = data.split("\\|");
-        BookReaderManagerment brm =new BookReaderManagerment(new Book(Integer.parseInt(datas[0])),
-                new Reader(Integer.parseInt(datas[1])),Integer.parseInt(datas[2]),datas[3],0);
+        BookReaderManagerment brm =new BookReaderManagerment(getBook(books,Integer.parseInt(datas[0])),
+                getReader(readers,Integer.parseInt(datas[1])),Integer.parseInt(datas[2]),datas[3],0);
 
         //brm.setBooks(new Book(Integer.parseInt(datas[0])));
         //brm.setReaders(new Reader(Integer.parseInt(datas[1])));
@@ -173,7 +176,30 @@ public class DataUltiliti {
         return brm;
     }
 
+    /**
+     * Phương thức trả về 1 đối tượng reader trong danh sách với ID cho trước
+     * @param readers
+     * @param readerID
+     * @return
+     */
+    private static Reader getReader(ArrayList<Reader> readers, int readerID) {
+        for(int i=0; i<readers.size();i++){
+            if(readers.get(i).getReaderID()==readerID){
+                return readers.get(i);
+            }
+        }
+        return null;
+    }
 
+    private static Book getBook(ArrayList<Book> books, int bookID) {
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getBookID() == bookID) {
+                return books.get(i);
+            }
+        }
+        return null;
+
+    }
     public void updateBRMFile (ArrayList<BookReaderManagerment> list, String fileName){
         //Delete file cu
     File file = new File(fileName);

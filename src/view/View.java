@@ -17,6 +17,7 @@ public class View {
         var readerFileName = "READER.DAT";
         var bRMFileName = "BRM.DAT";
         var controller = new DataUltiliti();
+        var ultiliti= new controlerUltiliti();
         var books = new ArrayList<Book>();
         var readers = new ArrayList<Reader>();
         var brms = new ArrayList<BookReaderManagerment>();
@@ -108,9 +109,7 @@ public class View {
                     readers = controller.readReadersFromFile(readerFileName);
                     brms = controller.readBRMFromFile(bRMFileName);
                     //B1:
-                    for (var a:brms) {
-                        System.out.println(a);
-                    }
+
                     int readerID, bookID;
                     boolean isBorrowable = false;
 
@@ -135,10 +134,9 @@ public class View {
                     boolean isFull = false;
                     do {
                         showBookinfo(books);
-                        System.out.println("nhap ma sach,nhap 0 de bo qua");
+                        System.out.println("nhap ma sach, nhap 0 de bo qua");
                         bookID = scanner.nextInt();
-
-                        if (bookID == 0) {
+                        if(bookID == 0) {
                             break;
                         }
                         isFull = checkFull(brms, readerID, bookID);//true neu muon du 3
@@ -176,12 +174,60 @@ public class View {
                     BookReaderManagerment b =new BookReaderManagerment(currentBook,currentReader,toltal1,status,0);
                     controller.writeBRMToFile(b,bRMFileName);
                     //B4
-                    var ultiliti= new controlerUltiliti();
                     brms = ultiliti.updateBRMInfo(brms,b);//cap nhat danh sach quan ly muon
                     controller.updateBRMFile(brms,bRMFileName);// cap nhat danh sach
                     showBRMInfo(brms);
                     break;
                 }
+                case 6:{
+                    int x=0;
+                    brms=controller.readBRMFromFile(bRMFileName);//doc danh sach trong file
+                    //update tong so luong muon
+                    brms = ultiliti.updateTotalOfBorrow(brms);
+                    for (var a:brms) {
+                        System.out.println(a);
+                    }
+                    do{
+                        System.out.println("__________cac lua chon xap xep__________");
+                        System.out.println("1. xap xep theo ban doc tu A-->z");
+                        System.out.println("2. xap xep theo tong so luong muon(giam dan)");
+                        System.out.println("0. thoat khoir mennu");
+                        System.out.println("m chon?");
+                        x= scanner.nextInt();
+                        if(x==0){
+                            break;
+                        }
+                        switch (x){
+                            case 1:{
+                                    //xap xep theo ten
+                                brms= ultiliti.sortbyReaderName(brms);
+
+                                showBRMInfo(brms);
+                                break;
+                            }
+                            case 2:{
+                                //xap xep theo so luong muon
+                                brms = ultiliti.sortByNumberOfBorrow(brms);
+                                showBRMInfo(brms);
+                                break;
+                            }
+                        }
+                    }while(true);
+                    break;
+                }
+                case 7:{
+                    brms= controller.readBRMFromFile(bRMFileName);
+                    String name;
+                    System.out.println("nhap ten ban muon tim kiem");
+                    name=scanner.nextLine();
+                    for (var a:brms) {
+                        if(a.getReaders().getFullName().equals(name)==true){
+                            System.out.println(a);
+                        }
+                    }
+                    break;
+                }
+
 
             }
 
@@ -226,17 +272,6 @@ public class View {
         }
         return 0;
 
-    }
-
-    // test
-    private static int countBorrowed(int bookId, int readerId, ArrayList<BookReaderManagerment> m) {
-        for (int i = 0; m != null && i < m.size() && m.get(i) != null; i++) {
-            if (m.get(i).getReaders().getReaderID() == readerId &&
-                    m.get(i).getBooks().getBookID() == bookId) {
-                return m.get(i).getNumberOfBorrow();
-            }
-        }
-return 0;
     }
 
     //xem coi soluong ban doc dax muon toi da hay chua

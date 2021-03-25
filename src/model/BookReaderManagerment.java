@@ -62,7 +62,9 @@ public class BookReaderManagerment {
     public String toString() {
         return "BookReaderManagerment{" +
                 "books=" + books.getBookID() +
+                ",booksName=" + books.getBookName()+
                 ", readers=" + readers.getReaderID() +
+                ", readersName=" + readers.getFullName() +
                 ", numberOfBorrow=" + numberOfBorrow +
                 ", State='" + State + '\'' +
                 ", total=" + total +
